@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- head 中 -->
+    <link rel="stylesheet" href="css/materialize.min.css">
+
+
+    <title>H5</title>
+</head>
+<body>
+<div class="card-panel" style="margin-left: 10px;margin-right: 10px">
+    <div class="row">
+            q版本:8.9.85
+    </div>
+    <div class="row">
+            功能介绍
+    </div>
+    <div class="row">
+            1:检测所有群信息，合格的信息转发到指定用户
+    </div>
+    <div class="row">
+            2:所有群签到
+    </div>
+    <div class="row">
+            3:所有群修改群名片
+    </div>
+    <div class="row">
+            监测音量按键停止脚本
+    </div>
+</div>
+
+
+<!--<div class="alert alert-primary" role="alert">-->
+<!--    最新版脚本下载地址: <a href="https://wwis.lanzoum.com/iXSCJ0o8aebi">点击打开下载  密码:4w9m</a>-->
+<!--</div>-->
+<div class="card-panel" style="margin-left: 10px;margin-right: 10px">
+<!--    <div class="row">-->
+<!--        <div class="input-field  inline col s12">-->
+<!--            <input id="key" type="text" class="validate">-->
+<!--            <label for="key">卡密</label>-->
+<!--        </div>-->
+<!--    </div>-->
+    <div class="row">
+        <div class="switch">
+            <div>一 : 群信息检测转发</div>
+            <label>
+                关闭
+                <input id="function1" type="checkbox">
+                <span class="lever"></span>
+                打开
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div>合格消息转发给(可填群名称,群发言不会检测骚扰)先搜索一遍名称</div>
+        <div class="input-field  inline col s12">
+            <input id="qqName" type="text" class="validate">
+            <label for="qqName">名称</label>
+        </div>
+    </div>
+    <!--   检测话术-->
+    <div class="row">
+        <div class="input-field col s12">
+            <textarea style="height: 200px" id="textarea2" class="materialize-textarea"></textarea>
+            <label for="textarea2">检测信息关键字(换行分割)</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="switch">
+            <div>二 : 群签到</div>
+            <label>
+                关闭
+                <input id="function2" type="checkbox">
+                <span class="lever"></span>
+                打开
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="switch">
+            <div>三 : 群修改名片</div>
+            <label>
+                关闭
+                <input id="function3" type="checkbox">
+                <span class="lever"></span>
+                打开
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div>新名片</div>
+        <div class="input-field  inline col s12">
+            <input id="newName" type="text" class="validate">
+            <label for="newName">新名片</label>
+        </div>
+    </div>
+</div>
+
+<div class="card-panel" style="margin-left: 10px;margin-right: 10px">
+
+
+    <div class="row">
+
+        <div class="col s6">
+            <button class="btn waves-effect waves-light " type="button" name="action" onclick="javascript:save()">保存参数
+            </button>
+        </div>
+        <div class="col s6">
+            <button class="btn waves-effect waves-light" type="button" name="action" onclick="javascript:window.ec.start()">
+                启动脚本
+            </button>
+        </div>
+    </div>
+</div>
+<!-- body 最后 -->
+<script src="htmljs/jquery.min.js"></script>
+<script src="htmljs/materialize.min.js"></script>
+
+
+</body>
+<script>
+    $(function () {
+        var textarea2 = window.ec.getConfig("textarea2");
+        $("#textarea2").val(textarea2);
+
+        var key = window.ec.getConfig("key");
+        $("#key").val(key);
+
+        var qqName = window.ec.getConfig("qqName");
+        $("#qqName").val(qqName);
+
+        var newName = window.ec.getConfig("newName");
+        $("#newName").val(newName);
+
+        var function1 = window.ec.getConfig("function1");
+        if (function1 == "true") {
+            $("#function1").attr("checked", true);
+        } else {
+            $("#function1").attr("checked", false);
+        }
+        var function2 = window.ec.getConfig("function2");
+        if (function2 == "true") {
+            $("#function2").attr("checked", true);
+        } else {
+            $("#function2").attr("checked", false);
+        }
+        var function3 = window.ec.getConfig("function3");
+        if (function3 == "true") {
+            $("#function3").attr("checked", true);
+        } else {
+            $("#function3").attr("checked", false);
+        }
+
+
+    });
+
+    //保存参数的函数
+    function save() {
+
+        var textarea2 =  $("#textarea2").val();
+        window.ec.saveConfig("textarea2", textarea2);
+
+        var pwd = $("#key").val();
+        window.ec.saveConfig("key", pwd);
+
+        var qqName = $("#qqName").val();
+        window.ec.saveConfig("qqName", qqName);
+
+        var newName = $("#newName").val();
+        window.ec.saveConfig("newName", newName);
+
+        let function1 = $("#function1").is(':checked');
+        if (function1) {
+            window.ec.saveConfig("function1", true);
+        } else {
+            window.ec.saveConfig("function1", false);
+        }
+        let function2 = $("#function2").is(':checked');
+        if (function2) {
+            window.ec.saveConfig("function2", true);
+        } else {
+            window.ec.saveConfig("function2", false);
+        }
+
+        let function3 = $("#function3").is(':checked');
+        if (function3) {
+            window.ec.saveConfig("function3", true);
+        } else {
+            window.ec.saveConfig("function3", false);
+        }
+
+    }
+
+</script>
+
+</html>
