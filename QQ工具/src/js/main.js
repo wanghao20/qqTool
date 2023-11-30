@@ -146,14 +146,16 @@ function 检测消息自动回复() {
                 // logd(JSON.stringify(nodeNum));
                 logd("当前存在消息:" + nodeNum.text)
                 // 定位到消息
-                click(id(dyhomeMsgNumId))
+                let dataXXy=找到坐标2(nodeNum.parent())
+                doubleClickPoint(dataXXy.x,dataXXy.y)
+                sleep(50)
                 logd("定位到消息")
                 sleep(500)
                 let dyListMsgUnId = "com.tencent.mobileqq:id/ym8"
                 // 找到未读信息
                 let state = 找到(id, dyListMsgUnId)
                 if (!state) {
-                    click(id(dyhomeMsgNumId))
+                   clickPoint(dataXXy.x,dataXXy.y)
                     sleep(500)
                     continue
                 }
@@ -275,6 +277,19 @@ function 找到坐标(type, data) {
         sleep(1000);
         var result = selectors.bounds;
         let centerX = result.left + (result.right - result.left) / 2+ (result.right - result.left) * 0.2;
+        let centerY = result.top + (result.bottom - result.top) / 2;
+        logd(JSON.stringify({x: centerX, y: centerY}));
+        return {x: centerX || 0, y: centerY || 0};
+    } else {
+        return {x: false, y: false};
+    }
+}
+function 找到坐标2( data) {
+    var selectors = data;
+    if (selectors) {
+        sleep(1000);
+        var result = selectors.bounds;
+        let centerX = result.left + (result.right - result.left) / 2;
         let centerY = result.top + (result.bottom - result.top) / 2;
         logd(JSON.stringify({x: centerX, y: centerY}));
         return {x: centerX || 0, y: centerY || 0};
