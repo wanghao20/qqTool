@@ -11,3 +11,5 @@
 ### 下载地址
 
 下载 [下载发布版](https://github.com/wanghao20/qqTool/blob/main/QQ%E5%B7%A5%E5%85%B7/build/release.apk).
+
+使用交流群:695164067
