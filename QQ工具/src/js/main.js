@@ -75,10 +75,16 @@ function openAppwx() {
  */
 function testIngPage() {
     logd("检测页面")
+    let isHaveFlow2 = id("com.tencent.mobileqq:id/swk").desc("更多");
+    if (has(isHaveFlow2)) {
+        back()
+        sleep(500)
+    }
 
     let isHaveFlow = text("消息");
     // 首页
     let isHome = text("联系人");
+
     if (has(text("重新登录"))) {
         logd("检测到重新登录等待2分钟重新登录");
         sleep(1000 * 60 * 2)
@@ -131,13 +137,12 @@ function 检测消息自动回复() {
     let msgList = []
     while (isWhile) {
         openApp()
-        // 关闭弹窗
-        if (has(id("com.tencent.mobileqq:id/az7"))) {
-            click(id("com.tencent.mobileqq:id/az7"))
-        }
+
         // 检测页面
         let page = testIngPage()
         if (page == "首页") {
+            // 刷新时间
+            date = timeFormat("yyyy-MM-dd");
             removeNodeFlag(0);
             let dyhomeMsgNumId = "com.tencent.mobileqq:id/khc"
             // 检测当前消息数量
@@ -146,11 +151,19 @@ function 检测消息自动回复() {
                 // logd(JSON.stringify(nodeNum));
                 logd("当前存在消息:" + nodeNum.text)
                 // 定位到消息
+                //回到最上边
+                let obj = 找到坐标(id, "com.tencent.mobileqq:id/nt4")
+                if (obj.x) {
+                    doubleClickPoint(obj.x, obj.y)
+                    sleep(100)
+                }
+                // 双击下面的消息红点
                 let dataXXy=找到坐标2(nodeNum.parent())
-                doubleClickPoint(dataXXy.x,dataXXy.y)
+                clickPoint(dataXXy.x,dataXXy.y)
                 sleep(50)
                 logd("定位到消息")
                 sleep(500)
+                // 抓取群新消息
                 let dyListMsgUnId = "com.tencent.mobileqq:id/ym8"
                 // 找到未读信息
                 let state = 找到(id, dyListMsgUnId)
@@ -171,10 +184,29 @@ function 检测消息自动回复() {
                         nodep.click()
                     }
                 }
+                let isHaveFlow2 = id("com.tencent.mobileqq:id/swk").desc("更多");
+                if (has(isHaveFlow2)) {
+                    back()
+                    sleep(500)
+                    continue
+                }
                 sleep(500)
                 logd("判断当前是否存在关键字")
                 // 判断当前是否存在关键字
                 let sendState=false
+                let qunName;
+                let msg;
+
+                let node2 = id("com.tencent.mobileqq:id/xqu").getOneNodeInfo(3000)
+                if (node2) {
+                    qunName=node2.text
+                    logd("群名称:" + node2.text)
+                    let qqName = readConfigString("qqName");
+                    if(node2.text==qqName){
+                        continue
+                    }
+                    msg = "群名称:" + node.text
+                }
                 for (let i = 0; i < keywords.length; i++) {
                     let keyword = '.*' + keywords[i] + '.*'
                     let data =
@@ -188,19 +220,9 @@ function 检测消息自动回复() {
                         if (!nodekeyword) {
                             continue;
                         }
-                        let msg;
                         if (nodekeyword) {
                             logd("匹配消息:" + nodekeyword.text)
-                            msg = "关键字消息:" + nodekeyword.text;
-                            let node = id("com.tencent.mobileqq:id/xqu").getOneNodeInfo(3000)
-                            if (node) {
-                                logd("群名称:" + node.text)
-                                let qqName = readConfigString("qqName");
-                                if(node.text==qqName){
-                                    continue
-                                }
-                                msg = msg + "&&&群名称:" + node.text
-                            }
+                            msg =msg + "&&&关键字消息:" + nodekeyword.text;
                             try {
                                 let x = nodekeyword.parent().parent().parent().previousSiblings()[0];
                                 let nameText = x.child(0).child(1)
@@ -208,8 +230,8 @@ function 检测消息自动回复() {
                                     logd("用户名称:" + nameText.text)
                                     msg = msg + "&&&用户名称:" + nameText.text
                                 } else {
-                                    logd("用户名称:获取用户名出错")
-                                    msg = msg + "&&&用户名称:获取用户名出错"
+                                    nameText = x.child(0).child(0)
+                                    msg = msg + "&&&用户名称:" + nameText.text
                                 }
                             } catch (e) {
                                 logd("用户名称:获取用户名出错")
@@ -229,13 +251,21 @@ function 检测消息自动回复() {
                     }
                 }
                 // 没有合格信息的时候签到
+                // 判断今日是否签到群
+                let qundata=date+qunName
                 if(!sendState){
                     // 没有关键字判断是否签到
                     // 二 : 随机签到
                     let function2 = readConfigString("function2")
                     if (function2 == "true") {
-                        if(群签到()){
-                            returnId("com.tencent.mobileqq:id/wa1")
+                        // 每日签到一次
+                        if (qunList.indexOf(qundata) == -1) {
+                            if(群签到()){
+                                returnId("com.tencent.mobileqq:id/wa1")
+                            }
+                            qunList.push(qundata)
+                        }else{
+                            logd(qundata+"已签到")
                         }
                     }
                     // 三 : 群修改名片
@@ -259,7 +289,8 @@ function 检测消息自动回复() {
     }
 
 }
-
+let qunList=[]
+let date = timeFormat("yyyy-MM-dd");
 function returnId(idData) {
     let num = 0
     while (!has(id(idData))) {
@@ -314,7 +345,6 @@ function 发送信息(msg) {
             if (obj.x) {
                 doubleClickPoint(obj.x, obj.y)
                 sleep(100)
-                sleep(200)
             }
             sleep(1000)
             // 点击搜索
@@ -363,7 +393,6 @@ function main() {
             const event = JSON.parse(data);
             if (event.keyCode === 24) {
                 logd("结束运行");
-                ocr.releaseAll();
                 exit();
             }
         });
@@ -407,8 +436,10 @@ function 群签到() {
     click(desc("加号"))
     sleep(500)
     找到(text, "图片")
-    switchLivec()
-    sleep(500)
+    if(!找到(text, "打卡",1)){
+        switchLivec()
+        sleep(500)
+    }
     找到(text, "打卡")
     clickText("打卡")
     sleep(500)
@@ -483,7 +514,63 @@ function autoServiceStart(time) {
 }
 
 function test() {
-    发送信息(111)
+    let sendState=false
+    let msgList=[]
+    let qunName;
+    for (let i = 0; i < keywords.length; i++) {
+        let keyword = '.*' + keywords[i] + '.*'
+        let data =
+            textMatch(keyword).checked(false)
+                .id("com.tencent.mobileqq:id/jnr")
+                .clz("android.widget.TextView");
+        if (has(data)) {
+            logd("找到关键字:" + keyword);
+            // 发送关键字给微信号并且记录名称
+            let nodekeyword = textMatch(keyword).getOneNodeInfo(3000)
+            if (!nodekeyword) {
+                continue;
+            }
+            let msg;
+            if (nodekeyword) {
+                logd("匹配消息:" + nodekeyword.text)
+                msg = "关键字消息:" + nodekeyword.text;
+                let node = id("com.tencent.mobileqq:id/xqu").getOneNodeInfo(3000)
+                if (node) {
+                    qunName=node.text
+                    logd("群名称:" + node.text)
+                    let qqName = readConfigString("qqName");
+                    if(node.text==qqName){
+                        continue
+                    }
+                    msg = msg + "&&&群名称:" + node.text
+                }
+                try {
+                    let x = nodekeyword.parent().parent().parent().previousSiblings()[0];
+                    let nameText = x.child(0).child(1)
+                    if (nameText) {
+                        logd("用户名称:" + nameText.text)
+                        msg = msg + "&&&用户名称:" + nameText.text
+                    } else {
+                        nameText = x.child(0).child(0)
+                        msg = msg + "&&&用户名称:" + nameText.text
+                    }
+                } catch (e) {
+                    logd("用户名称:获取用户名出错")
+                    msg = msg + "&&&用户名称:获取用户名出错"
+                }
+                logd(msg)
+
+            }
+            // 验证是否保存过
+            if (msgList.indexOf(msg) !== -1) {
+                logd("已存在:" + msgList)
+                continue;
+            }
+            msgList.push(msg)
+            // 发送信息(msg)
+            sendState=true
+        }
+    }
 
     exit()
 }
