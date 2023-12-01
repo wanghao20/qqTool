@@ -231,18 +231,24 @@ function 检测消息自动回复() {
                             logd("匹配消息:" + nodekeyword.text)
                             msg =msg + "----关键字消息:" + nodekeyword.text;
                             try {
-                                let x = nodekeyword.parent().parent().parent().previousSiblings()[0];
-                                let nameText = x.child(0).child(1)
-                                if (nameText) {
-                                    logd("用户名称:" + nameText.text)
-                                    msg = msg + "----用户名称:" + nameText.text
-                                } else {
-                                    nameText = x.child(0).child(0)
-                                    msg = msg + "----用户名称:" + nameText.text
+                                let x = nodekeyword.parent().parent().parent().previousSiblings()[1];
+                                //点击头像
+                                if (x){
+                                    x.click()
+                                }
+                                找到(text, "加好友")
+                                let namenode=id("com.tencent.mobileqq:id/srz").getOneNodeInfo(3000)
+                                let numnode=id("com.tencent.mobileqq:id/gmx").getOneNodeInfo(3000)
+                                if (namenode) {
+                                    logd("用户名称:" + namenode.text)
+                                    msg = msg + "----名称:" + namenode.text
+                                }
+                                if (numnode) {
+                                    msg = msg + "----用户" + numnode.text
                                 }
                             } catch (e) {
                                 logd("用户名称:获取用户名出错")
-                                msg = msg + "----用户名称:获取用户名出错"
+                                msg = msg + "----获取账户信息出错"
                             }
                             logd(msg)
 
