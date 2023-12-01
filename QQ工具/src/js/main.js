@@ -156,6 +156,8 @@ function 检测消息自动回复() {
                 if (obj.x) {
                     doubleClickPoint(obj.x, obj.y)
                     sleep(100)
+                }else{
+                    continue
                 }
                 // 双击下面的消息红点
                 let dataXXy=找到坐标2(nodeNum.parent())
@@ -351,6 +353,8 @@ function 发送信息(msg) {
             if (obj.x) {
                 doubleClickPoint(obj.x, obj.y)
                 sleep(100)
+            }else{
+                continue
             }
             sleep(1000)
             // 点击搜索
