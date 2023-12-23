@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="ef4029ac-f2f1-4366-a198-b150aabc9344" name="默认更改列表" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QQ工具/build/jar/main.jar" beforeDir="false" afterPath="$PROJECT_DIR$/QQ工具/build/jar/main.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/QQ工具/build/release.apk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/QQ工具/build/tmp3/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/QQ工具/build/uijar/ui.jar" beforeDir="false" afterPath="$PROJECT_DIR$/QQ工具/build/uijar/ui.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/QQ工具/src/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/QQ工具/src/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,7 +59,14 @@
       <workItem from="1701396173663" duration="3529000" />
       <workItem from="1701420875050" duration="442000" />
       <workItem from="1701424308237" duration="602000" />
-      <workItem from="1701439395855" duration="745000" />
+      <workItem from="1701439395855" duration="949000" />
+      <workItem from="1701490209603" duration="603000" />
+      <workItem from="1701668750623" duration="724000" />
+      <workItem from="1701671638128" duration="399000" />
+      <workItem from="1701944428893" duration="196000" />
+      <workItem from="1703337947683" duration="915000" />
+      <workItem from="1703339320461" duration="632000" />
+      <workItem from="1703340128153" duration="659000" />
     </task>
     <servers />
   </component>

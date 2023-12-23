@@ -135,6 +135,7 @@ function 检测消息自动回复() {
     // 找到首页点击消息
     let isWhile = true
     let msgList = []
+    let msgStrList = []
     while (isWhile) {
         openApp()
 
@@ -161,14 +162,19 @@ function 检测消息自动回复() {
                 }
                 // 双击下面的消息红点
                 let dataXXy=找到坐标2(nodeNum.parent())
-                clickPoint(dataXXy.x,dataXXy.y)
+                if (dataXXy.x) {
+                    clickPoint(dataXXy.x,dataXXy.y)
+                    sleep(100)
+                }else{
+                    continue
+                }
                 sleep(50)
                 logd("定位到消息")
                 sleep(500)
                 // 抓取群新消息
                 let dyListMsgUnId = "com.tencent.mobileqq:id/ym8"
                 // 找到未读信息
-                let state = 找到(id, dyListMsgUnId)
+                let state = 找到(id, dyListMsgUnId,10)
                 if (!state) {
                    clickPoint(dataXXy.x,dataXXy.y)
                     sleep(500)
@@ -230,6 +236,7 @@ function 检测消息自动回复() {
                         if (nodekeyword) {
                             logd("匹配消息:" + nodekeyword.text)
                             msg =msg + "----关键字消息:" + nodekeyword.text;
+                            // 获取用户信息
                             try {
                                 let x = nodekeyword.parent().parent().parent().previousSiblings()[1];
                                 //点击头像
@@ -246,12 +253,39 @@ function 检测消息自动回复() {
                                 if (numnode) {
                                     msg = msg + "----用户" + numnode.text
                                 }
+                                // 保存关键字信息
+                                msgStrList.push(nodekeyword.text)
                             } catch (e) {
+                                // 验证关键字是否保存过
+                                if (msgStrList.indexOf(nodekeyword.text) !== -1) {
+                                    logd("已存在:" + msgList)
+                                    continue;
+                                }
                                 logd("用户名称:获取用户名出错")
                                 msg = msg + "----获取账户信息出错"
                             }
+                            if(  找到(text, "加好友")){
+                                back()
+                                sleep(500)
+                            }
+                            // 获取群号码
+                            try {
+                                click(id("com.tencent.mobileqq:id/wa1"))
+                                sleep(500)
+                                找到(text, "我的本群昵称")
+                                if(!找到(text, "我的本群昵称")){
+                                    return false
+                                }
+                                let namenode=id("com.tencent.mobileqq:id/i_f").getNodeInfo(3000)
+                                if (namenode[1]) {
+                                    msg = msg + "----群号码：" + namenode[1].text.split("PT")[0]
+                                }
+                                // 保存关键字信息
+                                msgStrList.push(nodekeyword.text)
+                            } catch (e) {
+                                msg = msg + "----获取群号码出错"+e
+                            }
                             logd(msg)
-
                         }
                         // 验证是否保存过
                         if (msgList.indexOf(msg) !== -1) {
